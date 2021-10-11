@@ -1,1 +1,1 @@
-# crypto-dashboard
+# crypto-portfolio-dashboard
