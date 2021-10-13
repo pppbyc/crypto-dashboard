@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SearchForm from './SearchForm.jsx';
 import Coin from './Coin.jsx';
+import WatchList from './WatchList.jsx';
 
 
 const App = () => {
 
   const [coins, setCoins] = useState([]);
   const [search, setSearch] = useState('');
+  const [watched, setWatched] = useState([]);
+
 
   useEffect(() => {
     axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
@@ -20,17 +23,21 @@ const App = () => {
     })
   }, []);
 
+
+
   const handleChange = (e) => {
     setSearch(e.target.value);
   }
 
   const filteredCoins = coins.filter(coin =>
     coin.name.toLowerCase().includes(search.toLowerCase())
-  )
+  );
+
+
 
   return (
     <div className="coin-app">
-      <h1 className="coin-text">Crypto Dashboard</h1>
+      <h1 className="coin-text">Coins</h1>
       <div className="coin-search">
         <SearchForm handleChange={handleChange}/>
       </div>
@@ -46,6 +53,9 @@ const App = () => {
         volume={coin.total_volume}
         />
       ))}
+    <div>
+      <WatchList />
+    </div>
     </div>
   )
 }
