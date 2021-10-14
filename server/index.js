@@ -9,32 +9,40 @@ app.use(cors());
 app.use(express.static(`${__dirname}/../client/dist`));
 
 
-app.post('./favorite', (req, res) => {
-  console.log(req.body);
+app.post('/favorite', (req, res) => {
+  // console.log(req.body);
   addFavoriteCoin(req.body, (err, results) => {
     if (err) {
       res.sendStatus(400);
+    } else {
+      console.log('added Fav Coin!')
+      res.status(201).send(results);
     }
-    res.status(201).send(results);
+
   });
 });
 
 app.get('/favorite', (req, res) => {
+  console.log("server get")
   getFavoriteCoin((err, result) => {
     if (err) {
       res.sendStatus(404);
+    } else {
+      res.status(200).json(result);
     }
-    res.status(200).json(result);
+
   });
 });
 
 app.delete('/favorite', (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   deleteFavoriteCoin(req.body, (err) => {
     if (err) {
       res.sendStatus(404);
+    } else {
+      console.log('deleted Fav Coin!');
+      res.sendStatus(202);
     }
-    res.sendStatus(202);
   });
 });
 

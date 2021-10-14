@@ -9,18 +9,20 @@ const App = () => {
 
   const [coins, setCoins] = useState([]);
   const [search, setSearch] = useState('');
-  const [watched, setWatched] = useState([]);
 
-
-  useEffect(() => {
+  const getCoins = () => {
     axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
     .then(res => {
       setCoins(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     })
     .catch(err => {
       console.log(err);
-    })
+    });
+  }
+
+  useEffect(() => {
+    getCoins();
   }, []);
 
 
@@ -36,10 +38,14 @@ const App = () => {
 
 
   return (
+    <>
     <div className="coin-app">
       <h1 className="coin-text">Coins</h1>
       <div className="coin-search">
         <SearchForm handleChange={handleChange}/>
+      </div>
+      <div>
+        <WatchList coins={coins}/>
       </div>
       {filteredCoins.map(coin => (
         <Coin
@@ -53,10 +59,9 @@ const App = () => {
         volume={coin.total_volume}
         />
       ))}
-    <div>
-      <WatchList />
     </div>
-    </div>
+
+    </>
   )
 }
 

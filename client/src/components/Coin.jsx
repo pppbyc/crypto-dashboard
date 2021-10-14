@@ -1,4 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+
 
 const Coin = ({
   name,
@@ -9,25 +11,41 @@ const Coin = ({
   priceChange,
   marketcap,
 }) => {
-  const [watched, setWatched] = useState([]);
-  const [like, setLike] = useState(false);
+
+  const [favorite, setFav] = useState(false);
 
   const saveFavCoin = () => {
-    if (like) {
-      axios.post('/favorite', { name, image, symbol, marketcap, price, priceChange, volume, favorite })
-        .then((res) => {
-          setWatched((prev) => [...prev, res.data]);
-        })
-        .catch((err) => { console.log(err); });
-    }
+    axios.post('/favorite', { name, image, symbol, price, favorite:true })
+      .then((res) => {
+        // console.log(res.data);
+      })
+      .catch((err) => { console.log(err); });
+
+    // setLike((prev) => !prev);
+  }
+
+  const deleteFavCoin = () => {
+    axios.delete('/favorite', { name, image, symbol, favorite })
+      .then((res) => {
+
+      })
+      .catch((err) => { console.log(err); });
   }
 
   const handleClick = () => {
-    console.log('clicked')
-    setLike((prev) => !prev);
+    console.log('clicked');
+    setFav(true);
+    saveFavCoin();
+  }
+
+  const handleUnClick = () => {
+    console.log('clicked');
+    setFav(false);
+    deleteFavCoin();
   }
 
   return (
+    <>
     <div className="coin-container">
       <div className="coin-row">
         <div className="coin">
@@ -44,10 +62,13 @@ const Coin = ({
             (<p className="coin-percent green">{priceChange.toFixed(2)}%</p>)
           }
           <p className="coin-marketcap">Mkt Cap: ${marketcap.toLocaleString()}</p>
-          {like ? (<i className="fas fa-star coin-far" onClick={handleClick} />) : (<i className="far fa-star coin-far" onClick={handleClick} />)}
+          {favorite ? (<i className="fas fa-star coin-far" onClick={handleUnClick} />)
+          :
+          (<i className="far fa-star coin-far" onClick={handleClick} />)}
         </div>
       </div>
     </div>
+    </>
   )
 
 }

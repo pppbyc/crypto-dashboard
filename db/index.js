@@ -8,20 +8,21 @@ mongoose.connect('mongodb://localhost:27017/coins', { useUnifiedTopology: true, 
 // db.once('open', () => {console.log('mongoose connected successfully');});
 
 const coinSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    unique: true,
+  },
+  price: Number,
   image: String,
   symbol: String,
-  marketcap: Number,
-  price: Number,
-  priceChange: Number,
-  volume: Number,
-  favorite: false
+  favorite: Boolean,
 });
 
 const Coin = mongoose.model('Coin', coinSchema);
 
 //query
 const addFavoriteCoin = (coinObj) => {
+
   const doc = new Coin(coinObj);
   return doc.save();
 };
